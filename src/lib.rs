@@ -1,3 +1,5 @@
+#[macro_use]
+extern crate lazy_static;
 extern crate chrono;
 extern crate num_integer;
 
@@ -6,6 +8,8 @@ use std::fmt;
 use chrono::format::{Fixed, Item, Numeric, Pad, StrftimeItems};
 use chrono::{Datelike, FixedOffset, NaiveDate, NaiveTime, Offset, TimeZone, Timelike};
 use num_integer::{div_floor, mod_floor};
+
+mod locales;
 
 pub trait LocaleDate {
 	fn formatl<'a>(&self, fmt: &'a str, locale: &str) -> DelayedFormatL10n<StrftimeItems<'a>>;
