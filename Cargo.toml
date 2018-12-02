@@ -1,0 +1,8 @@
+[package]
+name = "chrono-locale"
+version = "0.1.0"
+authors = ["Alessandro Pellizzari <alex@amiran.it>"]
+
+[dependencies]
+chrono = "0.4"
+num-integer = { version = "0.1", default-features = false }
