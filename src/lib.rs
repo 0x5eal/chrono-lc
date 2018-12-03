@@ -145,7 +145,7 @@ where
 					),
 
 					// for the future expansion
-					Internal(ref int) => (1, None),
+					Internal(_) => (1, None),
 				};
 
 				if let Some(v) = v {
@@ -272,46 +272,37 @@ where
 	Ok(())
 }
 
-// TODO: get values from localised arrays
-
-static SHORT_MONTHS: [&'static str; 12] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-static LONG_MONTHS: [&'static str; 12] = [
-	"January",
-	"February",
-	"March",
-	"April",
-	"May",
-	"June",
-	"July",
-	"August",
-	"September",
-	"October",
-	"November",
-	"December",
-];
-static SHORT_WEEKDAYS: [&'static str; 7] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-static LONG_WEEKDAYS: [&'static str; 7] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-
 fn short_month(month: usize, locale: &str) -> String {
-	SHORT_MONTHS[month].to_owned()
+	let res = locales::LOCALES.short_months.get(locale)
+		.or_else(|| locales::LOCALES.short_months.get("C"))
+		.unwrap();
+	res.get(month).map(|v| v.to_string()).unwrap_or_else(|| format!("{}", month))
 }
 
 fn long_month(month: usize, locale: &str) -> String {
-	LONG_MONTHS[month].to_owned()
+	let res = locales::LOCALES.long_months.get(locale)
+		.or_else(|| locales::LOCALES.long_months.get("C"))
+		.unwrap();
+	res.get(month).map(|v| v.to_string()).unwrap_or_else(|| format!("{}", month))
 }
 
 fn short_weekday(day: usize, locale: &str) -> String {
-	SHORT_WEEKDAYS[day].to_owned()
+	let res = locales::LOCALES.short_weekdays.get(locale)
+		.or_else(|| locales::LOCALES.short_weekdays.get("C"))
+		.unwrap();
+	res.get(day).map(|v| v.to_string()).unwrap_or_else(|| format!("{}", day))
 }
 
 fn long_weekday(day: usize, locale: &str) -> String {
-	LONG_WEEKDAYS[day].to_owned()
+	let res = locales::LOCALES.long_weekdays.get(locale)
+		.or_else(|| locales::LOCALES.long_weekdays.get("C"))
+		.unwrap();
+	res.get(day).map(|v| v.to_string()).unwrap_or_else(|| format!("{}", day))
 }
 
 #[cfg(test)]
 mod tests {
 	use super::LocaleDate;
-	use super::*;
 
 	// This test is copied from chrono's, disabling unsupported features
 	#[test]
