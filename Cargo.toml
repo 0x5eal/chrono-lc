@@ -2,7 +2,7 @@
 name = "chrono-locale"
 version = "0.1.0"
 authors = ["Alessandro Pellizzari <alex@amiran.it>"]
-# build = "build.rs"
+build = "build.rs"
 
 [dependencies]
 chrono = "0.4"
