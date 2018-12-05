@@ -1,5 +1,5 @@
 max_width = 150
 hard_tabs = true
-normalize_comments = false
-match_block_trailing_comma = true
-closure_block_indent_threshold = 1
+#normalize_comments = false
+#match_block_trailing_comma = true
+#closure_block_indent_threshold = 1

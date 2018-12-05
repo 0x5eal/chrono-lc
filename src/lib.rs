@@ -65,8 +65,7 @@ impl<'a, I: Iterator<Item = Item<'a>> + Clone> DelayedFormatL10n<I> {
 	}
 
 	/// Makes a new `DelayedFormatL10n` value out of local date and time and UTC offset.
-	pub fn new_with_offset(date: Option<NaiveDate>, time: Option<NaiveTime>, offset: &FixedOffset, items: I, locale: &str) -> DelayedFormatL10n<I>
-	{
+	pub fn new_with_offset(date: Option<NaiveDate>, time: Option<NaiveTime>, offset: &FixedOffset, items: I, locale: &str) -> DelayedFormatL10n<I> {
 		let name_and_diff = (offset.to_string(), offset.to_owned());
 		DelayedFormatL10n {
 			date,
@@ -273,28 +272,36 @@ where
 }
 
 fn short_month(month: usize, locale: &str) -> String {
-	let res = locales::LOCALES.short_months.get(locale)
+	let res = locales::LOCALES
+		.short_months
+		.get(locale)
 		.or_else(|| locales::LOCALES.short_months.get("C"))
 		.unwrap();
 	res.get(month).map(|v| v.to_string()).unwrap_or_else(|| format!("{}", month))
 }
 
 fn long_month(month: usize, locale: &str) -> String {
-	let res = locales::LOCALES.long_months.get(locale)
+	let res = locales::LOCALES
+		.long_months
+		.get(locale)
 		.or_else(|| locales::LOCALES.long_months.get("C"))
 		.unwrap();
 	res.get(month).map(|v| v.to_string()).unwrap_or_else(|| format!("{}", month))
 }
 
 fn short_weekday(day: usize, locale: &str) -> String {
-	let res = locales::LOCALES.short_weekdays.get(locale)
+	let res = locales::LOCALES
+		.short_weekdays
+		.get(locale)
 		.or_else(|| locales::LOCALES.short_weekdays.get("C"))
 		.unwrap();
 	res.get(day).map(|v| v.to_string()).unwrap_or_else(|| format!("{}", day))
 }
 
 fn long_weekday(day: usize, locale: &str) -> String {
-	let res = locales::LOCALES.long_weekdays.get(locale)
+	let res = locales::LOCALES
+		.long_weekdays
+		.get(locale)
 		.or_else(|| locales::LOCALES.long_weekdays.get("C"))
 		.unwrap();
 	res.get(day).map(|v| v.to_string()).unwrap_or_else(|| format!("{}", day))
@@ -355,9 +362,9 @@ mod tests {
 		assert_eq!(dt.formatl("%.6f", "en").to_string(), ".026490");
 		assert_eq!(dt.formatl("%.9f", "en").to_string(), ".026490708");
 		// The following formats are not exposed by chrono and cannot be formatted
-//		assert_eq!(dt.formatl("%3f", "en").to_string(), "026");
-//		assert_eq!(dt.formatl("%6f", "en").to_string(), "026490");
-//		assert_eq!(dt.formatl("%9f", "en").to_string(), "026490708");
+		//		assert_eq!(dt.formatl("%3f", "en").to_string(), "026");
+		//		assert_eq!(dt.formatl("%6f", "en").to_string(), "026490");
+		//		assert_eq!(dt.formatl("%9f", "en").to_string(), "026490708");
 		assert_eq!(dt.formatl("%R", "en").to_string(), "00:34");
 		assert_eq!(dt.formatl("%T", "en").to_string(), "00:34:60");
 		assert_eq!(dt.formatl("%X", "en").to_string(), "00:34:60");
