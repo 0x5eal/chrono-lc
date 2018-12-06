@@ -191,8 +191,8 @@ where
 					LongMonthName => date.map(|d| write!(w, "{}", long_month(d.month0() as usize, locale))),
 					ShortWeekdayName => date.map(|d| write!(w, "{}", short_weekday(d.weekday().num_days_from_monday() as usize, locale))),
 					LongWeekdayName => date.map(|d| write!(w, "{}", long_weekday(d.weekday().num_days_from_monday() as usize, locale))),
-					LowerAmPm => time.map(|t| write!(w, "{}", if t.hour12().0 { "pm" } else { "am" })),
-					UpperAmPm => time.map(|t| write!(w, "{}", if t.hour12().0 { "PM" } else { "AM" })),
+					LowerAmPm => time.map(|t| write!(w, "{}", ampm(t.hour12().0 as usize, locale))),
+					UpperAmPm => time.map(|t| write!(w, "{}", ampm(t.hour12().0 as usize, locale).to_uppercase())),
 					Nanosecond => time.map(|t| {
 						let nano = t.nanosecond() % 1_000_000_000;
 						if nano == 0 {
@@ -305,4 +305,13 @@ fn long_weekday(day: usize, locale: &str) -> String {
 		.or_else(|| locales::LOCALES.long_weekdays.get("C"))
 		.and_then(|res| res.get(day).map(|v| v.to_string()))
 		.unwrap_or_else(|| format!("{}", day))
+}
+
+fn ampm(spec: usize, locale: &str) -> String {
+	locales::LOCALES
+		.ampm
+		.get(locale)
+		.or_else(|| locales::LOCALES.ampm.get("C"))
+		.and_then(|res| res.get(spec).map(|v| v.to_string()))
+		.unwrap_or_else(|| format!("{}", spec))
 }

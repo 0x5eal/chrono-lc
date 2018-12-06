@@ -44,5 +44,9 @@
 		"Friday",
 		"Saturday",
 		"Sunday"
+	],
+	"ampm": [
+		"am",
+		"pm"
 	]
 }

@@ -6,6 +6,7 @@ pub struct Locales {
 	pub long_months: HashMap<String, Vec<&'static str>>,
 	pub short_weekdays: HashMap<String, Vec<&'static str>>,
 	pub long_weekdays: HashMap<String, Vec<&'static str>>,
+	pub ampm: HashMap<String, Vec<&'static str>>,
 }
 
 include!(concat!(env!("OUT_DIR"), "/locales.rs"));

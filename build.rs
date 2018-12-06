@@ -18,6 +18,7 @@ pub struct Locale {
 	long_months: Option<Vec<String>>,
 	short_weekdays: Option<Vec<String>>,
 	long_weekdays: Option<Vec<String>>,
+	ampm: Option<Vec<String>>,
 }
 
 fn main() {
@@ -32,38 +33,8 @@ fn main() {
 				long_months: HashMap::new(),
 				short_weekdays: HashMap::new(),
 				long_weekdays: HashMap::new(),
+				ampm: HashMap::new(),
 			};
-
-			res.short_months.insert(
-				"C".into(),
-				vec!["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-			);
-
-			res.long_months.insert(
-				"C".into(),
-				vec![
-					"January",
-					"February",
-					"March",
-					"April",
-					"May",
-					"June",
-					"July",
-					"August",
-					"September",
-					"October",
-					"November",
-					"December",
-				],
-			);
-
-			res.short_weekdays
-				.insert("C".into(), vec!["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]);
-
-			res.long_weekdays.insert(
-				"C".into(),
-				vec!["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-			);
 	"#####.as_bytes());
 
 	println!("Building...");
@@ -132,6 +103,20 @@ fn main() {
 						"res.short_weekdays.insert(\"{}\".into(), vec![{}]);\n",
 						locale_name,
 						short_weekdays
+							.iter()
+							.map(|s| format!("\"{}\"", s))
+							.collect::<Vec<String>>()
+							.join(",")
+					).as_bytes()).unwrap();
+				}
+			}
+
+			if let Some(ampm) = locale_data.ampm {
+				if ampm.len() == 2 {
+					let _ = f.write_all(format!(
+						"res.ampm.insert(\"{}\".into(), vec![{}]);\n",
+						locale_name,
+						ampm
 							.iter()
 							.map(|s| format!("\"{}\"", s))
 							.collect::<Vec<String>>()

@@ -44,5 +44,9 @@
 		"Venerdí",
 		"Sabato",
 		"Domenica"
+	],
+	"ampm": [
+		"am",
+		"pm"
 	]
 }
