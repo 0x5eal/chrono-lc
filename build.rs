@@ -1,16 +1,16 @@
-extern crate walkdir;
 extern crate serde;
+extern crate walkdir;
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
 
+use serde_json::Error as JsonError;
 use std::env;
 use std::fs::File;
-use std::io::{Write, Read, Error as IoError};
+use std::io::{Error as IoError, Read, Write};
 use std::path::Path;
-use serde_json::{Error as JsonError};
 
-use walkdir::{WalkDir, DirEntry};
+use walkdir::{DirEntry, WalkDir};
 
 #[derive(Deserialize)]
 pub struct Locale {
@@ -26,7 +26,8 @@ fn main() {
 	let dest_path = Path::new(&out_dir).join("locales.rs");
 	let mut f = File::create(&dest_path).unwrap();
 
-	let _ = f.write_all(r#####"lazy_static! {
+	let _ = f.write_all(
+		r#####"lazy_static! {
 		pub static ref LOCALES: Locales = {
 			let mut res = Locales {
 				short_months: HashMap::new(),
@@ -35,7 +36,9 @@ fn main() {
 				long_weekdays: HashMap::new(),
 				ampm: HashMap::new(),
 			};
-	"#####.as_bytes());
+	"#####
+			.as_bytes(),
+	);
 
 	println!("Building...");
 	for entry in WalkDir::new("locales") {
@@ -44,7 +47,7 @@ fn main() {
 
 		if entry.path().extension().map(|e| e != "json").unwrap_or(false) {
 			println!("Not a json file");
-			continue
+			continue;
 		}
 
 		let locale_name = entry.path().file_stem().map(|n| n.to_string_lossy());
@@ -52,85 +55,82 @@ fn main() {
 			continue;
 		}
 
-
 		let locale_name = locale_name.unwrap().to_string();
 		if let Ok(locale_data) = load_locale(&entry) {
 			if let Some(long_months) = locale_data.long_months {
 				if long_months.len() == 12 {
-					let _ = f.write_all(format!(
-						"res.long_months.insert(\"{}\".into(), vec![{}]);\n",
-						locale_name,
-						long_months
-							.iter()
-							.map(|s| format!("\"{}\"", s))
-							.collect::<Vec<String>>()
-							.join(",")
-					).as_bytes()).unwrap();
+					let _ = f
+						.write_all(
+							format!(
+								"res.long_months.insert(\"{}\".into(), vec![{}]);\n",
+								locale_name,
+								long_months.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
+							).as_bytes(),
+						).unwrap();
 				}
 			}
 
 			if let Some(short_months) = locale_data.short_months {
 				if short_months.len() == 12 {
-					let _ = f.write_all(format!(
-						"res.short_months.insert(\"{}\".into(), vec![{}]);\n",
-						locale_name,
-						short_months
-							.iter()
-							.map(|s| format!("\"{}\"", s))
-							.collect::<Vec<String>>()
-							.join(",")
-					).as_bytes()).unwrap();
+					let _ = f
+						.write_all(
+							format!(
+								"res.short_months.insert(\"{}\".into(), vec![{}]);\n",
+								locale_name,
+								short_months.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
+							).as_bytes(),
+						).unwrap();
 				}
 			}
 
 			if let Some(long_weekdays) = locale_data.long_weekdays {
 				if long_weekdays.len() == 7 {
-					let _ = f.write_all(format!(
-						"res.long_weekdays.insert(\"{}\".into(), vec![{}]);\n",
-						locale_name,
-						long_weekdays
-							.iter()
-							.map(|s| format!("\"{}\"", s))
-							.collect::<Vec<String>>()
-							.join(",")
-					).as_bytes()).unwrap();
+					let _ = f
+						.write_all(
+							format!(
+								"res.long_weekdays.insert(\"{}\".into(), vec![{}]);\n",
+								locale_name,
+								long_weekdays.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
+							).as_bytes(),
+						).unwrap();
 				}
 			}
 
 			if let Some(short_weekdays) = locale_data.short_weekdays {
 				if short_weekdays.len() == 7 {
-					let _ = f.write_all(format!(
-						"res.short_weekdays.insert(\"{}\".into(), vec![{}]);\n",
-						locale_name,
-						short_weekdays
-							.iter()
-							.map(|s| format!("\"{}\"", s))
-							.collect::<Vec<String>>()
-							.join(",")
-					).as_bytes()).unwrap();
+					let _ = f
+						.write_all(
+							format!(
+								"res.short_weekdays.insert(\"{}\".into(), vec![{}]);\n",
+								locale_name,
+								short_weekdays.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
+							).as_bytes(),
+						).unwrap();
 				}
 			}
 
 			if let Some(ampm) = locale_data.ampm {
 				if ampm.len() == 2 {
-					let _ = f.write_all(format!(
-						"res.ampm.insert(\"{}\".into(), vec![{}]);\n",
-						locale_name,
-						ampm
-							.iter()
-							.map(|s| format!("\"{}\"", s))
-							.collect::<Vec<String>>()
-							.join(",")
-					).as_bytes()).unwrap();
+					let _ = f
+						.write_all(
+							format!(
+								"res.ampm.insert(\"{}\".into(), vec![{}]);\n",
+								locale_name,
+								ampm.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
+							).as_bytes(),
+						).unwrap();
 				}
 			}
 		}
 	}
 
-	let _ = f.write_all(r####"		res
+	let _ = f.write_all(
+		r####"		res
 			};
 		}
-		"####.as_bytes());
+		"####
+			.as_bytes(),
+	);
 }
 
 fn load_locale(entry: &DirEntry) -> Result<Locale, BuildError> {
