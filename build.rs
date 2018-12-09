@@ -110,7 +110,7 @@ fn main() {
 			}
 
 			if let Some(ampm) = locale_data.ampm {
-				if ampm.len() == 2 {
+				if ampm.len() == 2 || ampm.len() == 4 {
 					let _ = f
 						.write_all(
 							format!(

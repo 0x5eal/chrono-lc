@@ -192,7 +192,7 @@ where
 					ShortWeekdayName => date.map(|d| write!(w, "{}", short_weekday(d.weekday().num_days_from_monday() as usize, locale))),
 					LongWeekdayName => date.map(|d| write!(w, "{}", long_weekday(d.weekday().num_days_from_monday() as usize, locale))),
 					LowerAmPm => time.map(|t| write!(w, "{}", ampm(t.hour12().0 as usize, locale))),
-					UpperAmPm => time.map(|t| write!(w, "{}", ampm(t.hour12().0 as usize, locale).to_uppercase())),
+					UpperAmPm => time.map(|t| write!(w, "{}", ampm(t.hour12().0 as usize + 2, locale))),
 					Nanosecond => time.map(|t| {
 						let nano = t.nanosecond() % 1_000_000_000;
 						if nano == 0 {
@@ -271,47 +271,47 @@ where
 	Ok(())
 }
 
-fn short_month(month: usize, locale: &str) -> String {
+fn short_month(month: usize, locale: &str) -> &'static str {
 	locales::LOCALES
 		.short_months
 		.get(locale)
-		.or_else(|| locales::LOCALES.short_months.get("C"))
-		.and_then(|res| res.get(month).map(|v| v.to_string()))
-		.unwrap_or_else(|| format!("{}", month))
+		.and_then(|res| res.get(month))
+		.or_else(|| locales::LOCALES.short_months.get("C").and_then(|res| res.get(month)))
+		.expect("Internal error: missing short months in the C locale")
 }
 
-fn long_month(month: usize, locale: &str) -> String {
+fn long_month(month: usize, locale: &str) -> &'static str {
 	locales::LOCALES
 		.long_months
 		.get(locale)
-		.or_else(|| locales::LOCALES.long_months.get("C"))
-		.and_then(|res| res.get(month).map(|v| v.to_string()))
-		.unwrap_or_else(|| format!("{}", month))
+		.and_then(|res| res.get(month))
+		.or_else(|| locales::LOCALES.long_months.get("C").and_then(|res| res.get(month)))
+		.expect("Internal error: missing long months in the C locale")
 }
 
-fn short_weekday(day: usize, locale: &str) -> String {
+fn short_weekday(day: usize, locale: &str) -> &'static str {
 	locales::LOCALES
 		.short_weekdays
 		.get(locale)
-		.or_else(|| locales::LOCALES.short_weekdays.get("C"))
-		.and_then(|res| res.get(day).map(|v| v.to_string()))
-		.unwrap_or_else(|| format!("{}", day))
+		.and_then(|res| res.get(day))
+		.or_else(|| locales::LOCALES.short_weekdays.get("C").and_then(|res| res.get(day)))
+		.expect("Internal error: missing short weekdays in the C locale")
 }
 
-fn long_weekday(day: usize, locale: &str) -> String {
+fn long_weekday(day: usize, locale: &str) -> &'static str {
 	locales::LOCALES
 		.long_weekdays
 		.get(locale)
-		.or_else(|| locales::LOCALES.long_weekdays.get("C"))
-		.and_then(|res| res.get(day).map(|v| v.to_string()))
-		.unwrap_or_else(|| format!("{}", day))
+		.and_then(|res| res.get(day))
+		.or_else(|| locales::LOCALES.long_weekdays.get("C").and_then(|res| res.get(day)))
+		.expect("Internal error: missing long weekdays in the C locale")
 }
 
-fn ampm(spec: usize, locale: &str) -> String {
+fn ampm(spec: usize, locale: &str) -> &'static str {
 	locales::LOCALES
 		.ampm
 		.get(locale)
-		.or_else(|| locales::LOCALES.ampm.get("C"))
-		.and_then(|res| res.get(spec).map(|v| v.to_string()))
-		.unwrap_or_else(|| format!("{}", spec))
+		.and_then(|res| res.get(spec))
+		.or_else(|| locales::LOCALES.ampm.get("C").and_then(|res| res.get(spec)))
+		.expect("Internal error: missing AM/PM in the C locale")
 }
