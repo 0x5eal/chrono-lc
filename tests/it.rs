@@ -14,14 +14,14 @@ fn format_it() {
 	assert_eq!(dt.formatl("%C", "it").to_string(), "20");
 	assert_eq!(dt.formatl("%y", "it").to_string(), "01");
 	assert_eq!(dt.formatl("%m", "it").to_string(), "07");
-	assert_eq!(dt.formatl("%b", "it").to_string(), "Lug");
-	assert_eq!(dt.formatl("%B", "it").to_string(), "Luglio");
-	assert_eq!(dt.formatl("%h", "it").to_string(), "Lug");
+	assert_eq!(dt.formatl("%b", "it").to_string(), "lug");
+	assert_eq!(dt.formatl("%B", "it").to_string(), "luglio");
+	assert_eq!(dt.formatl("%h", "it").to_string(), "lug");
 	assert_eq!(dt.formatl("%d", "it").to_string(), "08");
 	assert_eq!(dt.formatl("%e", "it").to_string(), " 8");
 	assert_eq!(dt.formatl("%e", "it").to_string(), dt.formatl("%_d", "it").to_string());
-	assert_eq!(dt.formatl("%a", "it").to_string(), "Dom");
-	assert_eq!(dt.formatl("%A", "it").to_string(), "Domenica");
+	assert_eq!(dt.formatl("%a", "it").to_string(), "dom");
+	assert_eq!(dt.formatl("%A", "it").to_string(), "domenica");
 	assert_eq!(dt.formatl("%w", "it").to_string(), "0");
 	assert_eq!(dt.formatl("%u", "it").to_string(), "7");
 	assert_eq!(dt.formatl("%U", "it").to_string(), "28");
@@ -33,7 +33,7 @@ fn format_it() {
 	assert_eq!(dt.formatl("%D", "it").to_string(), "07/08/01");
 	assert_eq!(dt.formatl("%x", "it").to_string(), "07/08/01");
 	assert_eq!(dt.formatl("%F", "it").to_string(), "2001-07-08");
-	assert_eq!(dt.formatl("%v", "it").to_string(), " 8-Lug-2001");
+	assert_eq!(dt.formatl("%v", "it").to_string(), " 8-lug-2001");
 
 	// time specifiers
 	assert_eq!(dt.formatl("%H", "it").to_string(), "00");
@@ -67,7 +67,7 @@ fn format_it() {
 	assert_eq!(dt.formatl("%:z", "it").to_string(), "+09:30");
 
 	// date & time specifiers
-	assert_eq!(dt.formatl("%c", "it").to_string(), "Dom Lug  8 00:34:60 2001");
+	assert_eq!(dt.formatl("%c", "it").to_string(), "dom lug  8 00:34:60 2001");
 	assert_eq!(dt.formatl("%+", "it").to_string(), "2001-07-08T00:34:60.026490708+09:30");
 	assert_eq!(
 		dt.with_nanosecond(1_026_490_000).unwrap().formatl("%+", "it").to_string(),
