@@ -297,7 +297,7 @@ fn find_key(key: usize, data: &'static HashMap<String, Vec<&'static str>>, local
 	data.get(locale)
 		.and_then(|res| res.get(key))
 		.or_else(|| {
-			if locale.contains("-") {
+			if locale.contains('-') {
 				locale
 					.split('-')
 					.collect::<Vec<&str>>()
