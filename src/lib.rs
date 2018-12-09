@@ -104,6 +104,7 @@ pub fn format_l10n<'a, I>(
 where
 	I: Iterator<Item = Item<'a>>,
 {
+	let locale = locale.to_lowercase().replace("_", "-");
 	for item in items {
 		match item {
 			Item::Literal(s) | Item::Space(s) => write!(w, "{}", s)?,
@@ -188,12 +189,12 @@ where
 				}
 
 				let ret = match spec {
-					ShortMonthName => date.map(|d| write!(w, "{}", short_month(d.month0() as usize, locale))),
-					LongMonthName => date.map(|d| write!(w, "{}", long_month(d.month0() as usize, locale))),
-					ShortWeekdayName => date.map(|d| write!(w, "{}", short_weekday(d.weekday().num_days_from_monday() as usize, locale))),
-					LongWeekdayName => date.map(|d| write!(w, "{}", long_weekday(d.weekday().num_days_from_monday() as usize, locale))),
-					LowerAmPm => time.map(|t| write!(w, "{}", ampm(t.hour12().0 as usize, locale))),
-					UpperAmPm => time.map(|t| write!(w, "{}", ampm(t.hour12().0 as usize + 2, locale))),
+					ShortMonthName => date.map(|d| write!(w, "{}", short_month(d.month0() as usize, &locale))),
+					LongMonthName => date.map(|d| write!(w, "{}", long_month(d.month0() as usize, &locale))),
+					ShortWeekdayName => date.map(|d| write!(w, "{}", short_weekday(d.weekday().num_days_from_monday() as usize, &locale))),
+					LongWeekdayName => date.map(|d| write!(w, "{}", long_weekday(d.weekday().num_days_from_monday() as usize, &locale))),
+					LowerAmPm => time.map(|t| write!(w, "{}", ampm(t.hour12().0 as usize, &locale))),
+					UpperAmPm => time.map(|t| write!(w, "{}", ampm(t.hour12().0 as usize + 2, &locale))),
 					Nanosecond => time.map(|t| {
 						let nano = t.nanosecond() % 1_000_000_000;
 						if nano == 0 {
@@ -232,9 +233,9 @@ where
 							write!(
 								w,
 								"{}, {:2} {} {:04} {:02}:{:02}:{:02} ",
-								short_weekday(d.weekday().num_days_from_monday() as usize, locale),
+								short_weekday(d.weekday().num_days_from_monday() as usize, &locale),
 								d.day(),
-								short_month(d.month0() as usize, locale),
+								short_month(d.month0() as usize, &locale),
 								d.year(),
 								t.hour(),
 								t.minute(),
@@ -296,12 +297,16 @@ fn find_key(key: usize, data: &'static HashMap<String, Vec<&'static str>>, local
 	data.get(locale)
 		.and_then(|res| res.get(key))
 		.or_else(|| {
-			locale
-				.split(|c| c == '-' || c == '_')
-				.collect::<Vec<&str>>()
-				.get(0)
-				.cloned()
-				.and_then(|locale| data.get(locale).and_then(|res| res.get(key)))
+			if locale.contains("-") {
+				locale
+					.split('-')
+					.collect::<Vec<&str>>()
+					.get(0)
+					.cloned()
+					.and_then(|locale| data.get(locale).and_then(|res| res.get(key)))
+			} else {
+				None
+			}
 		})
 		.or_else(|| data.get("C").and_then(|res| res.get(key)))
 }
