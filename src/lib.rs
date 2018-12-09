@@ -3,6 +3,7 @@ extern crate lazy_static;
 extern crate chrono;
 extern crate num_integer;
 
+use std::collections::HashMap;
 use std::fmt;
 
 use chrono::format::{Fixed, Item, Numeric, Pad, StrftimeItems};
@@ -271,47 +272,36 @@ where
 	Ok(())
 }
 
-fn short_month(month: usize, locale: &str) -> &'static str {
-	locales::LOCALES
-		.short_months
-		.get(locale)
-		.and_then(|res| res.get(month))
-		.or_else(|| locales::LOCALES.short_months.get("C").and_then(|res| res.get(month)))
-		.expect("Internal error: missing short months in the C locale")
+fn short_month(key: usize, locale: &str) -> &'static str {
+	find_key(key, &locales::LOCALES.short_months, locale).expect("Internal error: missing short months in the C locale")
 }
 
-fn long_month(month: usize, locale: &str) -> &'static str {
-	locales::LOCALES
-		.long_months
-		.get(locale)
-		.and_then(|res| res.get(month))
-		.or_else(|| locales::LOCALES.long_months.get("C").and_then(|res| res.get(month)))
-		.expect("Internal error: missing long months in the C locale")
+fn long_month(key: usize, locale: &str) -> &'static str {
+	find_key(key, &locales::LOCALES.long_months, locale).expect("Internal error: missing long months in the C locale")
 }
 
-fn short_weekday(day: usize, locale: &str) -> &'static str {
-	locales::LOCALES
-		.short_weekdays
-		.get(locale)
-		.and_then(|res| res.get(day))
-		.or_else(|| locales::LOCALES.short_weekdays.get("C").and_then(|res| res.get(day)))
-		.expect("Internal error: missing short weekdays in the C locale")
+fn short_weekday(key: usize, locale: &str) -> &'static str {
+	find_key(key, &locales::LOCALES.short_weekdays, locale).expect("Internal error: missing short weekdays in the C locale")
 }
 
-fn long_weekday(day: usize, locale: &str) -> &'static str {
-	locales::LOCALES
-		.long_weekdays
-		.get(locale)
-		.and_then(|res| res.get(day))
-		.or_else(|| locales::LOCALES.long_weekdays.get("C").and_then(|res| res.get(day)))
-		.expect("Internal error: missing long weekdays in the C locale")
+fn long_weekday(key: usize, locale: &str) -> &'static str {
+	find_key(key, &locales::LOCALES.long_weekdays, locale).expect("Internal error: missing long weekdays in the C locale")
 }
 
-fn ampm(spec: usize, locale: &str) -> &'static str {
-	locales::LOCALES
-		.ampm
-		.get(locale)
-		.and_then(|res| res.get(spec))
-		.or_else(|| locales::LOCALES.ampm.get("C").and_then(|res| res.get(spec)))
-		.expect("Internal error: missing AM/PM in the C locale")
+fn ampm(key: usize, locale: &str) -> &'static str {
+	find_key(key, &locales::LOCALES.ampm, locale).expect("Internal error: missing AM/PM in the C locale")
+}
+
+fn find_key(key: usize, data: &'static HashMap<String, Vec<&'static str>>, locale: &str) -> Option<&'static &'static str> {
+	data.get(locale)
+		.and_then(|res| res.get(key))
+		.or_else(|| {
+			locale
+				.split(|c| c == '-' || c == '_')
+				.collect::<Vec<&str>>()
+				.get(0)
+				.cloned()
+				.and_then(|locale| data.get(locale).and_then(|res| res.get(key)))
+		})
+		.or_else(|| data.get("C").and_then(|res| res.get(key)))
 }
