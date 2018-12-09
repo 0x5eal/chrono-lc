@@ -6,23 +6,23 @@ use chrono_locale::LocaleDate;
 
 // This test is copied from chrono's, disabling unsupported features
 #[test]
-fn format_en() {
+fn format_it() {
 	let dt = FixedOffset::east(34200).ymd(2001, 7, 8).and_hms_nano(0, 34, 59, 1_026_490_708);
-	let locale = "en";
+	let locale = "es";
 
 	// date specifiers
 	assert_eq!(dt.formatl("%Y", locale).to_string(), "2001");
 	assert_eq!(dt.formatl("%C", locale).to_string(), "20");
 	assert_eq!(dt.formatl("%y", locale).to_string(), "01");
 	assert_eq!(dt.formatl("%m", locale).to_string(), "07");
-	assert_eq!(dt.formatl("%b", locale).to_string(), "Jul");
-	assert_eq!(dt.formatl("%B", locale).to_string(), "July");
-	assert_eq!(dt.formatl("%h", locale).to_string(), "Jul");
+	assert_eq!(dt.formatl("%b", locale).to_string(), "jul");
+	assert_eq!(dt.formatl("%B", locale).to_string(), "julio");
+	assert_eq!(dt.formatl("%h", locale).to_string(), "jul");
 	assert_eq!(dt.formatl("%d", locale).to_string(), "08");
 	assert_eq!(dt.formatl("%e", locale).to_string(), " 8");
 	assert_eq!(dt.formatl("%e", locale).to_string(), dt.formatl("%_d", locale).to_string());
-	assert_eq!(dt.formatl("%a", locale).to_string(), "Sun");
-	assert_eq!(dt.formatl("%A", locale).to_string(), "Sunday");
+	assert_eq!(dt.formatl("%a", locale).to_string(), "dom");
+	assert_eq!(dt.formatl("%A", locale).to_string(), "domingo");
 	assert_eq!(dt.formatl("%w", locale).to_string(), "0");
 	assert_eq!(dt.formatl("%u", locale).to_string(), "7");
 	assert_eq!(dt.formatl("%U", locale).to_string(), "28");
@@ -34,7 +34,7 @@ fn format_en() {
 	assert_eq!(dt.formatl("%D", locale).to_string(), "07/08/01");
 	assert_eq!(dt.formatl("%x", locale).to_string(), "07/08/01");
 	assert_eq!(dt.formatl("%F", locale).to_string(), "2001-07-08");
-	assert_eq!(dt.formatl("%v", locale).to_string(), " 8-Jul-2001");
+	assert_eq!(dt.formatl("%v", locale).to_string(), " 8-jul-2001");
 
 	// time specifiers
 	assert_eq!(dt.formatl("%H", locale).to_string(), "00");
@@ -68,7 +68,7 @@ fn format_en() {
 	assert_eq!(dt.formatl("%:z", locale).to_string(), "+09:30");
 
 	// date & time specifiers
-	assert_eq!(dt.formatl("%c", locale).to_string(), "Sun Jul  8 00:34:60 2001");
+	assert_eq!(dt.formatl("%c", locale).to_string(), "dom jul  8 00:34:60 2001");
 	assert_eq!(dt.formatl("%+", locale).to_string(), "2001-07-08T00:34:60.026490708+09:30");
 	assert_eq!(
 		dt.with_nanosecond(1_026_490_000).unwrap().formatl("%+", locale).to_string(),
