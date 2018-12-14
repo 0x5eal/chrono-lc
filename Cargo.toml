@@ -1,7 +1,14 @@
 [package]
-name = "chrono-locale"
+name = "chrono_locale"
 version = "0.1.0"
 authors = ["Alessandro Pellizzari <alex@amiran.it>"]
+description = "Localised date and time formatting library for Rust, based on chrono"
+homepage = "https://github.com/Alex-PK/chrono-locale"
+readme = "README.md"
+keywords = ["date", "time", "calendar"]
+categories = ["date-and-time"]
+license = "MIT/Apache-2.0"
+repository = "https://github.com/Alex-PK/chrono-locale"
 build = "build.rs"
 
 [dependencies]
