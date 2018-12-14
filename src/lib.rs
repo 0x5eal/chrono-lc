@@ -5,7 +5,7 @@
 //!
 //! Put this in your Cargo.toml:
 //!
-//! ```
+//! ```toml
 //! [dependencies]
 //! chrono = "0.4"
 //! chrono_locale = "0.1"
@@ -13,7 +13,7 @@
 //!
 //! Then put this in your `lib.rs` or `main.rs`:
 //!
-//! ```
+//! ```rust
 //! extern crate chrono;
 //! extern crate chrono_locale;
 //!
@@ -26,7 +26,12 @@
 //!
 //! To format a chrono `Date` or `DateTime` object, you can use the `formatl` method:
 //!
-//! ```
+//! ```rust
+//! # extern crate chrono;
+//! # extern crate chrono_locale;
+//! # use chrono::prelude::*;
+//! # use chrono_locale::LocaleDate;
+//!
 //! let dt = FixedOffset::east(34200).ymd(2001, 7, 8).and_hms_nano(0, 34, 59, 1_026_490_708);
 //! println!("{}", dt.formatl("%c", "fr"));
 //! ```
@@ -70,6 +75,12 @@ pub trait LocaleDate {
 impl LocaleDate for chrono::NaiveDate {
 	fn formatl<'a>(&self, fmt: &'a str, locale: &str) -> DelayedFormatL10n<StrftimeItems<'a>> {
 		DelayedFormatL10n::new(Some(*self), None, StrftimeItems::new(fmt), locale)
+	}
+}
+
+impl LocaleDate for chrono::NaiveDateTime {
+	fn formatl<'a>(&self, fmt: &'a str, locale: &str) -> DelayedFormatL10n<StrftimeItems<'a>> {
+		DelayedFormatL10n::new(Some(self.date()), Some(self.time()), StrftimeItems::new(fmt), locale)
 	}
 }
 
