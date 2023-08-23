@@ -84,13 +84,6 @@ impl LocaleDate for chrono::NaiveDateTime {
 	}
 }
 
-impl<Tz: TimeZone> LocaleDate for chrono::Date<Tz> {
-	fn formatl<'a>(&self, fmt: &'a str, locale: &str) -> DelayedFormatL10n<StrftimeItems<'a>> {
-		let offset = self.offset().fix();
-		DelayedFormatL10n::new_with_offset(Some(self.naive_local()), None, &offset, StrftimeItems::new(fmt), locale)
-	}
-}
-
 impl<Tz: TimeZone> LocaleDate for chrono::DateTime<Tz> {
 	fn formatl<'a>(&self, fmt: &'a str, locale: &str) -> DelayedFormatL10n<StrftimeItems<'a>> {
 		let local = self.naive_local();
@@ -206,8 +199,7 @@ where
 							(_, _, _) => None,
 						},
 					),
-
-					// for the future expansion
+										// for the future expansion
 					Internal(_) => (1, None),
 				};
 
@@ -285,6 +277,8 @@ where
 					TimezoneName => off.map(|&(ref name, _)| write!(w, "{}", *name)),
 					TimezoneOffsetColon => off.map(|&(_, off)| write_local_minus_utc(w, off, false, true)),
 					TimezoneOffsetColonZ => off.map(|&(_, off)| write_local_minus_utc(w, off, true, true)),
+					TimezoneOffsetDoubleColon => off.map(|&(_, off)| write_local_minus_utc(w, off, false, true)),
+					TimezoneOffsetTripleColon => off.map(|&(_, off)| write_local_minus_utc(w, off, false, true)),
 					TimezoneOffset => off.map(|&(_, off)| write_local_minus_utc(w, off, false, false)),
 					TimezoneOffsetZ => off.map(|&(_, off)| write_local_minus_utc(w, off, true, false)),
 					RFC2822 =>
