@@ -1,6 +1,7 @@
 [package]
 name = "chrono_locale"
 version = "0.1.1"
+edition = "2021"
 authors = ["Alessandro Pellizzari <alex@amiran.it>", "Erica Marigold <hi@devcomp.xyz>"]
 description = "Localised date and time formatting library for Rust, based on chrono"
 homepage = "https://github.com/0x5eal/chrono-locale"
