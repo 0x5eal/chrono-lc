@@ -14,7 +14,7 @@ chrono_locale = { git = "https://github.com/0x5eal/chrono-locale.git", rev = "2a
 
 Then put this in your `lib.rs` or `main.rs`:
 
-```
+```rs
 use chrono::prelude::*;
 use chrono_locale::LocaleDate;
 ```
@@ -24,7 +24,7 @@ Please see ['chrono`'s documentation](https://docs.rs/chrono/).
 
 To format a chrono `Date` or `DateTime` object, you can use the `formatl` method:
 
-```
+```rs
 let dt = FixedOffset::east_opt(34200)
 	.unwrap()
 	.with_ymd_and_hms(2001, 7, 8, 0, 34, 59)
