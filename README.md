@@ -35,5 +35,5 @@ let dt = FixedOffset::east_opt(34200)
 println!("{}", dt.formatl("%c", "fr"));
 ```
 
-All of [chrono's formatting placeholders](https://docs.rs/chrono/0.4.56/chrono/format/strftime/index.html)
+All of [chrono's formatting placeholders](https://docs.rs/chrono/latest/chrono/format/strftime/index.html)
 work except for `%3f`, `%6f` and `%9f` (but `%.3f`, `%.6f` and `%.9f` work normally)
