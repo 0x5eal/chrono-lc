@@ -1,0 +1,48 @@
+{
+	"short_months": [
+		"Oca",
+		"Şub",
+		"Mar",
+		"Nis",
+		"May",
+		"Haz",
+		"Tem",
+		"Ağu",
+		"Eyl",
+		"Eki",
+		"Kas",
+		"Ara"
+	],
+	"long_months": [
+		"Ocak",
+		"Şubat",
+		"Mart",
+		"Nisan",
+		"Mayıs",
+		"Haziran",
+		"Temmuz",
+		"Ağustos",
+		"Eylül",
+		"Ekim",
+		"Kasım",
+		"Aralık"
+	],
+	"short_weekdays": [
+		"Pzt",
+		"Sal",
+		"Çar",
+		"Per",
+		"Cum",
+		"Cmt",
+		"Paz"
+	],
+	"long_weekdays": [
+		"Pazartesi",
+		"Salı",
+		"Çarşamba",
+		"Perşembe",
+		"Cuma",
+		"Cumartesi",
+		"Pazar"
+	]
+}
