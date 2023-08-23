@@ -9,7 +9,7 @@ Put this in your Cargo.toml:
 ```toml
 [dependencies]
 chrono = "0.4.56"
-chrono_locale = { git = "https://github.com/0x5eal/chrono-locale.git", version = "v0.1.2" }
+chrono_locale = { git = "https://github.com/0x5eal/chrono-locale.git", tag = "v0.1.2" }
 ```
 
 Then put this in your `lib.rs` or `main.rs`:
