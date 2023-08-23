@@ -8,7 +8,7 @@
 //! ```toml
 //! [dependencies]
 //! chrono = "0.4"
-//! chrono_locale = "0.1"
+//! chrono_locale = { git = "https://github.com/0x5eal/chrono-locale.git", rev = "f8599bf" }
 //! ```
 //!
 //! Then put this in your `lib.rs` or `main.rs`:
