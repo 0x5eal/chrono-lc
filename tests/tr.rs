@@ -39,7 +39,7 @@ fn format_it() {
 	assert_eq!(dt.formatl("%D", locale).to_string(), "07/08/01");
 	assert_eq!(dt.formatl("%x", locale).to_string(), "07/08/01");
 	assert_eq!(dt.formatl("%F", locale).to_string(), "2001-07-08");
-	assert_eq!(dt.formatl("%v", locale).to_string(), " 8-Temmuz-2001");
+	assert_eq!(dt.formatl("%v", locale).to_string(), " 8-Tem-2001");
 
 	// time specifiers
 	assert_eq!(dt.formatl("%H", locale).to_string(), "00");
