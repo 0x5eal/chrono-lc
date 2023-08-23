@@ -25,7 +25,13 @@ Please see ['chrono`'s documentation](https://docs.rs/chrono/).
 To format a chrono `Date` or `DateTime` object, you can use the `formatl` method:
 
 ```
-let dt = FixedOffset::east(34200).ymd(2001, 7, 8).and_hms_nano(0, 34, 59, 1_026_490_708);
+let dt = FixedOffset::east_opt(34200)
+	.unwrap()
+	.with_ymd_and_hms(2001, 7, 8, 0, 34, 59)
+	.unwrap()
+	.with_nanosecond(1_026_490_708)
+	.unwrap();
+
 println!("{}", dt.formatl("%c", "fr"));
 ```
 
