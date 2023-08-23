@@ -1,13 +1,18 @@
 extern crate chrono;
 extern crate chrono_locale;
 
-use chrono::{FixedOffset, TimeZone, Timelike, NaiveDateTime};
+use chrono::{FixedOffset, TimeZone, Timelike};
 use chrono_locale::LocaleDate;
 
 // This test is copied from chrono's, disabling unsupported features
 #[test]
 fn format_en() {
-	let dt = FixedOffset::east(34200).ymd(2001, 7, 8).and_hms_nano(0, 34, 59, 1_026_490_708);
+	let dt = FixedOffset::east_opt(34200)
+		.expect("out of bound")
+		.with_ymd_and_hms(2001, 7, 8, 0, 34, 59)
+		.unwrap()
+		.with_nanosecond(1_026_490_708)
+		.expect("out of bound");
 	let locale = "en";
 
 	// date specifiers
@@ -82,10 +87,14 @@ fn format_en() {
 	assert_eq!(dt.formatl("%%", locale).to_string(), "%");
 }
 
-
 #[test]
 fn format_en_naive() {
-	let dt = FixedOffset::east(34200).ymd(2001, 7, 8).and_hms_nano(0, 34, 59, 1_026_490_708);
+	let dt = FixedOffset::east_opt(34200)
+		.expect("out of bound")
+		.with_ymd_and_hms(2001, 7, 8, 0, 34, 59)
+		.unwrap()
+		.with_nanosecond(1_026_490_708)
+		.expect("out of bound");
 	let dt = dt.naive_local();
 	let locale = "en";
 
@@ -133,7 +142,7 @@ fn format_en_naive() {
 
 	// date & time specifiers
 	assert_eq!(dt.formatl("%c", locale).to_string(), "Sun Jul  8 00:34:60 2001");
-//	assert_eq!(dt.formatl("%+", locale).to_string(), "2001-07-08T00:34:60.026490708+09:30");
+	//	assert_eq!(dt.formatl("%+", locale).to_string(), "2001-07-08T00:34:60.026490708+09:30");
 	assert_eq!(dt.formatl("%s", locale).to_string(), "994552499");
 
 	// special specifiers
