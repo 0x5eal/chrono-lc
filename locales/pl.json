@@ -1,0 +1,48 @@
+{
+	"short_months": [
+		"sty",
+		"lut",
+		"mar",
+		"kwi",
+		"maj",
+		"cze",
+		"lip",
+		"wrz",
+		"set",
+		"paź",
+		"lis",
+		"gru"
+	],
+	"long_months": [
+		"styczeń",
+		"luty",
+		"marzec",
+		"kwiecień",
+		"maj",
+		"czerwiec",
+		"lipiec",
+		"wrzesień",
+		"setembro",
+		"październik",
+		"listopad",
+		"grudzień"
+	],
+	"short_weekdays": [
+		"pon",
+		"wt",
+		"śr",
+		"czw",
+		"pt",
+		"sob",
+		"niedz"
+	],
+	"long_weekdays": [
+		"poniedziałek",
+		"wtorek",
+		"środa",
+		"czwartek",
+		"piątek",
+		"sobota",
+		"niedziela"
+	]
+}
