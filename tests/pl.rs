@@ -1,8 +1,5 @@
-extern crate chrono;
-extern crate chrono_locale;
-
 use chrono::{FixedOffset, TimeZone, Timelike};
-use chrono_locale::LocaleDate;
+use chrono_lc::LocaleDate;
 
 // This test is copied from chrono's, disabling unsupported features
 #[test]

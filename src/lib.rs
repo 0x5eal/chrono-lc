@@ -8,17 +8,14 @@
 //! ```toml
 //! [dependencies]
 //! chrono = "0.4"
-//! chrono_locale = { git = "https://github.com/0x5eal/chrono-locale.git", tag = "v0.1.2" }
+//! chrono_lc = "0.1.2"
 //! ```
 //!
 //! Then put this in your `lib.rs` or `main.rs`:
 //!
 //! ```rust
-//! extern crate chrono;
-//! extern crate chrono_locale;
-//!
 //! use chrono::prelude::*;
-//! use chrono_locale::LocaleDate;
+//! use chrono_lc::LocaleDate;
 //! ```
 //!
 //! You can choose to import just parts of chrono instead of the whole prelude.
@@ -28,7 +25,7 @@
 //!
 //! ```rust
 //! # use chrono::prelude::*;
-//! # use chrono_locale::LocaleDate;
+//! # use chrono_lc::LocaleDate;
 //!
 //! let dt = FixedOffset::east_opt(34200)
 //!		.unwrap()
@@ -60,8 +57,6 @@
 
 #[macro_use]
 extern crate lazy_static;
-extern crate chrono;
-extern crate num_integer;
 
 use std::collections::HashMap;
 use std::fmt;

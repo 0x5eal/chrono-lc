@@ -9,14 +9,14 @@ Put this in your Cargo.toml:
 ```toml
 [dependencies]
 chrono = "0.4.56"
-chrono_locale = { git = "https://github.com/0x5eal/chrono-locale.git", tag = "v0.1.2" }
+chrono_lc = "0.1.2"
 ```
 
 Then put this in your `lib.rs` or `main.rs`:
 
 ```rs
 use chrono::prelude::*;
-use chrono_locale::LocaleDate;
+use chrono_lc::LocaleDate;
 ```
 
 You can choose to import just parts of chrono instead of the whole prelude.
@@ -26,11 +26,11 @@ To format a chrono `Date` or `DateTime` object, you can use the `formatl` method
 
 ```rs
 let dt = FixedOffset::east_opt(34200)
-	.unwrap()
-	.with_ymd_and_hms(2001, 7, 8, 0, 34, 59)
-	.unwrap()
-	.with_nanosecond(1_026_490_708)
-	.unwrap();
+ .unwrap()
+ .with_ymd_and_hms(2001, 7, 8, 0, 34, 59)
+ .unwrap()
+ .with_nanosecond(1_026_490_708)
+ .unwrap();
 
 println!("{}", dt.formatl("%c", "fr"));
 ```

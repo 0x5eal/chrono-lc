@@ -1,9 +1,4 @@
-extern crate serde;
-extern crate walkdir;
-#[macro_use]
-extern crate serde_derive;
-extern crate serde_json;
-
+use serde_derive::Deserialize;
 use serde_json::Error as JsonError;
 use std::env;
 use std::fs::File;

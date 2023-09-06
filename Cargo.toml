@@ -1,5 +1,5 @@
 [package]
-name = "chrono_locale"
+name = "chrono_lc"
 version = "0.1.2"
 edition = "2021"
 authors = ["Alessandro Pellizzari <alex@amiran.it>", "Erica Marigold <hi@devcomp.xyz>"]
