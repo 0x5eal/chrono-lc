@@ -8,7 +8,7 @@
 //! ```toml
 //! [dependencies]
 //! chrono = "0.4"
-//! chrono_lc = "0.1.2"
+//! chrono_lc = "0.1.3"
 //! ```
 //!
 //! Then put this in your `lib.rs` or `main.rs`:
