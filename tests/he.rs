@@ -1,8 +1,8 @@
 extern crate chrono;
-extern crate chrono_locale;
+extern crate chrono_lc;
 
 use chrono::{FixedOffset, TimeZone, Timelike};
-use chrono_locale::LocaleDate;
+use chrono_lc::LocaleDate;
 
 // This test is copied from chrono's, disabling unsupported features
 #[test]
@@ -96,7 +96,7 @@ fn format_en_naive() {
 		.with_nanosecond(1_026_490_708)
 		.expect("out of bound");
 	let dt = dt.naive_local();
-	let locale = "en";
+	let locale = "he";
 
 	// date specifiers
 	assert_eq!(dt.formatl("%Y", locale).to_string(), "2001");
