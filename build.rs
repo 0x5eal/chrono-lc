@@ -59,76 +59,71 @@ fn main() {
 		if let Ok(locale_data) = load_locale(&entry) {
 			if let Some(long_months) = locale_data.long_months {
 				if long_months.len() == 12 {
-					let _ = f
-						.write_all(
-							format!(
-								"res.long_months.insert(\"{}\".into(), vec![{}]);\n",
-								locale_name,
-								long_months.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
-							)
-							.as_bytes(),
+					f.write_all(
+						format!(
+							"res.long_months.insert(\"{}\".into(), vec![{}]);\n",
+							locale_name,
+							long_months.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
 						)
-						.unwrap();
+						.as_bytes(),
+					)
+					.unwrap();
 				}
 			}
 
 			if let Some(short_months) = locale_data.short_months {
 				if short_months.len() == 12 {
-					let _ = f
-						.write_all(
-							format!(
-								"res.short_months.insert(\"{}\".into(), vec![{}]);\n",
-								locale_name,
-								short_months.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
-							)
-							.as_bytes(),
+					f.write_all(
+						format!(
+							"res.short_months.insert(\"{}\".into(), vec![{}]);\n",
+							locale_name,
+							short_months.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
 						)
-						.unwrap();
+						.as_bytes(),
+					)
+					.unwrap();
 				}
 			}
 
 			if let Some(long_weekdays) = locale_data.long_weekdays {
 				if long_weekdays.len() == 7 {
-					let _ = f
-						.write_all(
-							format!(
-								"res.long_weekdays.insert(\"{}\".into(), vec![{}]);\n",
-								locale_name,
-								long_weekdays.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
-							)
-							.as_bytes(),
+					f.write_all(
+						format!(
+							"res.long_weekdays.insert(\"{}\".into(), vec![{}]);\n",
+							locale_name,
+							long_weekdays.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
 						)
-						.unwrap();
+						.as_bytes(),
+					)
+					.unwrap();
 				}
 			}
 
 			if let Some(short_weekdays) = locale_data.short_weekdays {
 				if short_weekdays.len() == 7 {
-					let _ = f
-						.write_all(
-							format!(
-								"res.short_weekdays.insert(\"{}\".into(), vec![{}]);\n",
-								locale_name,
-								short_weekdays.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
-							)
-							.as_bytes(),
+					f.write_all(
+						format!(
+							"res.short_weekdays.insert(\"{}\".into(), vec![{}]);\n",
+							locale_name,
+							short_weekdays.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
 						)
-						.unwrap();
+						.as_bytes(),
+					)
+					.unwrap();
 				}
 			}
 
 			if let Some(ampm) = locale_data.ampm {
 				if ampm.len() == 4 {
-					let _ = f
-						.write_all(
-							format!(
-								"res.ampm.insert(\"{}\".into(), vec![{}]);\n",
-								locale_name,
-								ampm.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
-							)
-							.as_bytes(),
+					f.write_all(
+						format!(
+							"res.ampm.insert(\"{}\".into(), vec![{}]);\n",
+							locale_name,
+							ampm.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
 						)
-						.unwrap();
+						.as_bytes(),
+					)
+					.unwrap();
 				}
 			}
 		}
