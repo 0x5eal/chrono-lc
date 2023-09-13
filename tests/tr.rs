@@ -138,7 +138,7 @@ fn format_tr_naive() {
 	assert_eq!(dt.formatl("%r", locale).to_string(), "12:34:60 AM");
 
 	// date & time specifiers
-	assert_eq!(dt.formatl("%c", locale).to_string(), "Sun Tem  8 00:34:60 2001");
+	assert_eq!(dt.formatl("%c", locale).to_string(), "Paz Tem  8 00:34:60 2001");
 	//	assert_eq!(dt.formatl("%+", locale).to_string(), "2001-07-08T00:34:60.026490708+09:30");
 	assert_eq!(dt.formatl("%s", locale).to_string(), "994552499");
 
