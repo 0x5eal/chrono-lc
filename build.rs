@@ -11,7 +11,6 @@ use std::io::{Error as IoError, Read, Write};
 use std::path::Path;
 
 use walkdir::{DirEntry, WalkDir};
-
 #[derive(Deserialize)]
 pub struct Locale {
 	short_months: Option<Vec<String>>,
@@ -27,9 +26,7 @@ fn main() {
 	let mut f = File::create(&dest_path).unwrap();
 
 	let _ = f.write_all(
-		r#####"
-		#![cfg_attr(rustfmt, rustfmt_skip)]
-		
+		r#####"// This file is @generated automatically by chrono_lc. Please don't edit by hand.		
 		lazy_static! {
 		pub static ref LOCALES: Locales = {
 			let mut res = Locales {
@@ -68,8 +65,10 @@ fn main() {
 								"res.long_months.insert(\"{}\".into(), vec![{}]);\n",
 								locale_name,
 								long_months.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
-							).as_bytes(),
-						).unwrap();
+							)
+							.as_bytes(),
+						)
+						.unwrap();
 				}
 			}
 
@@ -81,8 +80,10 @@ fn main() {
 								"res.short_months.insert(\"{}\".into(), vec![{}]);\n",
 								locale_name,
 								short_months.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
-							).as_bytes(),
-						).unwrap();
+							)
+							.as_bytes(),
+						)
+						.unwrap();
 				}
 			}
 
@@ -94,8 +95,10 @@ fn main() {
 								"res.long_weekdays.insert(\"{}\".into(), vec![{}]);\n",
 								locale_name,
 								long_weekdays.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
-							).as_bytes(),
-						).unwrap();
+							)
+							.as_bytes(),
+						)
+						.unwrap();
 				}
 			}
 
@@ -107,8 +110,10 @@ fn main() {
 								"res.short_weekdays.insert(\"{}\".into(), vec![{}]);\n",
 								locale_name,
 								short_weekdays.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
-							).as_bytes(),
-						).unwrap();
+							)
+							.as_bytes(),
+						)
+						.unwrap();
 				}
 			}
 
@@ -120,8 +125,10 @@ fn main() {
 								"res.ampm.insert(\"{}\".into(), vec![{}]);\n",
 								locale_name,
 								ampm.iter().map(|s| format!("\"{}\"", s)).collect::<Vec<String>>().join(",")
-							).as_bytes(),
-						).unwrap();
+							)
+							.as_bytes(),
+						)
+						.unwrap();
 				}
 			}
 		}
@@ -134,6 +141,8 @@ fn main() {
 		"####
 			.as_bytes(),
 	);
+
+	println!("Formatting...");
 }
 
 fn load_locale(entry: &DirEntry) -> Result<Locale, BuildError> {
