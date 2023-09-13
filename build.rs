@@ -1,4 +1,9 @@
-use serde_derive::Deserialize;
+extern crate serde;
+extern crate walkdir;
+#[macro_use]
+extern crate serde_derive;
+extern crate serde_json;
+
 use serde_json::Error as JsonError;
 use std::env;
 use std::fs::File;
@@ -22,7 +27,10 @@ fn main() {
 	let mut f = File::create(&dest_path).unwrap();
 
 	let _ = f.write_all(
-		r#####"lazy_static! {
+		r#####"
+		#![cfg_attr(rustfmt, rustfmt_skip)]
+		
+		lazy_static! {
 		pub static ref LOCALES: Locales = {
 			let mut res = Locales {
 				short_months: HashMap::new(),
