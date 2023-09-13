@@ -1,3 +1,4 @@
+use crate::lazy_static;
 use std::collections::HashMap;
 
 #[derive(Debug)]
@@ -9,4 +10,5 @@ pub struct Locales {
 	pub ampm: HashMap<String, Vec<&'static str>>,
 }
 
+#[rustfmt::skip]
 include!(concat!(env!("OUT_DIR"), "/locales.rs"));
