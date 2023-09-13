@@ -1,0 +1,54 @@
+{
+    "short_months": [
+        "Ene",
+        "Peb",
+        "Mar",
+        "Abr",
+        "May",
+        "Hun",
+        "Hul",
+        "Ago",
+        "Set",
+        "Okt",
+        "Nob",
+        "Dis"
+    ],
+    "long_months": [
+        "Enero",
+        "Pebrero",
+        "Marso",
+        "Abril",
+        "Mayo",
+        "Hunyo",
+        "Hulyo",
+        "Agosto",
+        "Setyembre",
+        "Oktubre",
+        "Nobyembre",
+        "Disyembre"
+    ],
+    "short_weekdays": [
+        "Lun",
+        "Mar",
+        "Miy",
+        "Huw",
+        "Biy",
+        "Sab",
+        "Lin"
+    ],
+    "long_weekdays": [
+        "Lunes",
+        "Martes",
+        "Miyerkules",
+        "Huwebes",
+        "Biyernes",
+        "Sabado",
+        "Linggo"
+    ],
+    "ampm": [
+        "am",
+        "pm",
+        "AM",
+        "PM"
+    ]
+}
