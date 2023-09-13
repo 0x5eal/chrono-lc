@@ -88,7 +88,7 @@ fn format_he() {
 }
 
 #[test]
-fn format_en_naive() {
+fn format_he_naive() {
 	let dt = FixedOffset::east_opt(34200)
 		.expect("out of bound")
 		.with_ymd_and_hms(2001, 7, 8, 0, 34, 59)
