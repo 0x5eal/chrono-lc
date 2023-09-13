@@ -4,7 +4,7 @@ This crate allows to format [chrono](https://github.com/chronotope/chrono) dates
 
 ## Usage
 
-Put this in your Cargo.toml:
+Include the dependency in `Cargo.toml`:
 
 ```toml
 [dependencies]
@@ -12,7 +12,7 @@ chrono = "0.4.56"
 chrono_lc = "0.1.3"
 ```
 
-Then put this in your `lib.rs` or `main.rs`:
+Import the required modules into `lib.rs` or `main.rs`:
 
 ```rs
 use chrono::prelude::*;
@@ -20,7 +20,7 @@ use chrono_lc::LocaleDate;
 ```
 
 You can choose to import just parts of chrono instead of the whole prelude.
-Please see ['chrono`'s documentation](https://docs.rs/chrono/).
+Please see ['`chrono`'s documentation](https://docs.rs/chrono/).
 
 To format a chrono `Date` or `DateTime` object, you can use the `formatl` method:
 
@@ -36,4 +36,4 @@ println!("{}", dt.formatl("%c", "fr"));
 ```
 
 All of [chrono's formatting placeholders](https://docs.rs/chrono/latest/chrono/format/strftime/index.html)
-work except for `%3f`, `%6f` and `%9f` (but `%.3f`, `%.6f` and `%.9f` work normally)
+work except for `%3f`, `%6f` and `%9f` (but `%.3f`, `%.6f` and `%.9f` work normally).
