@@ -1,4 +1,4 @@
-# chrono-locale
+# chrono-lc
 
 This crate allows to format [chrono](https://github.com/chronotope/chrono) dates with localized months and week days. Backwards comptible fork of [Alex-PK/chrono-locale](https://github.com/Alex-PK/chrono-locale), now works with the latest version of chrono.
 
