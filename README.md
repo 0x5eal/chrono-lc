@@ -8,7 +8,7 @@ Include the dependency in `Cargo.toml`:
 
 ```toml
 [dependencies]
-chrono = "0.4.56"
+chrono = "0.4.29"
 chrono_lc = "0.1.3"
 ```
 
