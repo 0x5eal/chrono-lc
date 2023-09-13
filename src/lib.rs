@@ -55,8 +55,8 @@
 //! doesn't find it, it will use the default: `C` (english)
 //!
 
-#[macro_use]
-extern crate lazy_static;
+#[allow(unused_imports)]
+pub(crate) use lazy_static::lazy_static;
 
 use std::collections::HashMap;
 use std::fmt;
@@ -198,7 +198,7 @@ where
 							(_, _, _) => None,
 						},
 					),
-										// for the future expansion
+					// for the future expansion
 					Internal(_) => (1, None),
 				};
 
