@@ -28,11 +28,11 @@
 //! # use chrono_lc::LocaleDate;
 //!
 //! let dt = FixedOffset::east_opt(34200)
-//!		.unwrap()
-//!		.with_ymd_and_hms(2001, 7, 8, 0, 34, 59)
-//!		.unwrap()
-//!		.with_nanosecond(1_026_490_708)
-//!		.unwrap();
+//!        .unwrap()
+//!        .with_ymd_and_hms(2001, 7, 8, 0, 34, 59)
+//!        .unwrap()
+//!        .with_nanosecond(1_026_490_708)
+//!        .unwrap();
 //!
 //! println!("{}", dt.formatl("%c", "fr"));
 //! ```
@@ -158,7 +158,7 @@ pub fn format_l10n<'a, I>(
 where
 	I: Iterator<Item = Item<'a>>,
 {
-	let locale = locale.to_lowercase().replace("_", "-");
+	let locale = locale.to_lowercase().replace('_', "-");
 	for item in items {
 		match item {
 			Item::Literal(s) | Item::Space(s) => write!(w, "{}", s)?,
@@ -203,7 +203,7 @@ where
 				};
 
 				if let Some(v) = v {
-					if (spec == Year || spec == IsoYear) && !(0 <= v && v < 10_000) {
+					if (spec == Year || spec == IsoYear) && !(0..10_000).contains(&v) {
 						// non-four-digit years require an explicit sign as per ISO 8601
 						match pad {
 							Pad::None => write!(w, "{:+}", v)?,
@@ -273,7 +273,7 @@ where
 						write!(w, ".{:09}", nano)
 					}),
 					Internal(_) => panic!("Internal is not supported"),
-					TimezoneName => off.map(|&(ref name, _)| write!(w, "{}", *name)),
+					TimezoneName => off.map(|(name, _)| write!(w, "{}", *name)),
 					TimezoneOffsetColon => off.map(|&(_, off)| write_local_minus_utc(w, off, false, true)),
 					TimezoneOffsetColonZ => off.map(|&(_, off)| write_local_minus_utc(w, off, true, true)),
 					TimezoneOffsetDoubleColon => off.map(|&(_, off)| write_local_minus_utc(w, off, false, true)),
@@ -356,7 +356,7 @@ fn find_key(key: usize, data: &'static HashMap<String, Vec<&'static str>>, local
 				locale
 					.split('-')
 					.collect::<Vec<&str>>()
-					.get(0)
+					.first()
 					.cloned()
 					.and_then(|locale| data.get(locale).and_then(|res| res.get(key)))
 			} else {
