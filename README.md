@@ -22,7 +22,8 @@ use chrono_lc::LocaleDate;
 You can choose to import just parts of chrono instead of the whole prelude.
 Please see ['`chrono`'s documentation](https://docs.rs/chrono/).
 
-To format a chrono `Date` or `DateTime` object, you can use the `formatl` method:
+> **Note**
+> To format a chrono `Date` or `DateTime` object, you can use the `formatl` method:
 
 ```rs
 let dt = FixedOffset::east_opt(34200)
