@@ -93,7 +93,7 @@ fn format_tr_naive() {
 		.with_nanosecond(1_026_490_708)
 		.expect("out of bound");
 	let dt = dt.naive_local();
-	let locale = "en";
+	let locale = "tr";
 
 	// date specifiers
 	assert_eq!(dt.formatl("%Y", locale).to_string(), "2001");
