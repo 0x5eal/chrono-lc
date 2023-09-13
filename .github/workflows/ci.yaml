@@ -25,7 +25,7 @@ jobs:
         run: cargo fmt -- --check
 
       - name: Build
-        run: cargo build --locked
+        run: cargo build
 
       - name: Clippy
         run: cargo clippy
