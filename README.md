@@ -8,8 +8,8 @@ Include the dependency in `Cargo.toml`:
 
 ```toml
 [dependencies]
-chrono = "0.4.29"
-chrono_lc = "0.1.3"
+chrono = "0.4"
+chrono_lc = "0.1.4"
 ```
 
 Import the required modules into `lib.rs` or `main.rs`:
