@@ -1,0 +1,48 @@
+{
+	"short_months": [
+		"Tammi",
+		"Helmi",
+		"Maalis,
+		"Huhti",
+		"Touko",
+		"Kesä",
+		"Heinä",
+		"Elo",
+		"Syys",
+		"Loka",
+		"Marras",
+		"Joulu"
+	],
+	"long_months": [
+		"Tammikuu",
+		"Helmikuu",
+		"Maaliskuu",
+		"Huhtikuu",
+		"Toukokuu",
+		"Kesäkuu",
+		"Heinäkuu",
+		"Elokuu",
+		"Syyskuu",
+		"Lokakuu",
+		"Marraskuu",
+		"Joulukuu"
+	],
+	"short_weekdays": [
+		"Ma",
+		"Ti",
+		"Ke",
+		"To",
+		"Pe",
+		"La",
+		"Su"
+	],
+	"long_weekdays": [
+		"Maanantai",
+		"Tiistai",
+		"Keskiviikko",
+		"Torstai",
+		"Perjantai",
+		"Lauantai",
+		"Sunnuntai"
+	]
+}
