@@ -1,9 +1,12 @@
-chrono-locale is dual-licensed under The MIT License [1] and
-Apache 2.0 License [2]. Copyright (c) 2018, Alessandro Pellizzari.
+chrono-lc is dual-licensed under The MIT License [1] and
+Apache 2.0 License [2]. Copyright (c) 2024 CompeyDev.
 
 Nota Bene: This is same as Chrono and the Rust Project's own license.
 
-This project contains parts of code from the rust-chrono project,
+This project is forked from chrono-locale, Copyright (c) Alessandro 
+Pellizzari and contributors.
+
+This project also contains parts of code from the rust-chrono project,
 Copyright (c) Kang Seonghoon and contributors.
 
 [1]: <http://opensource.org/licenses/MIT>, which is reproduced below:
