@@ -1,6 +1,6 @@
 [package]
 name = "chrono_lc"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 authors = ["Alessandro Pellizzari <alex@amiran.it>", "Erica Marigold <hi@devcomp.xyz>"]
 description = "Localised date and time formatting library for Rust, based on chrono"
