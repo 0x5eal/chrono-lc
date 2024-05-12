@@ -9,7 +9,7 @@ Include the dependency in `Cargo.toml`:
 ```toml
 [dependencies]
 chrono = "0.4"
-chrono_lc = "0.1.5"
+chrono_lc = "0.1.6"
 ```
 
 Import the required modules into `lib.rs` or `main.rs`:
@@ -19,7 +19,7 @@ use chrono::prelude::*;
 use chrono_lc::LocaleDate;
 ```
 > **Note**
-> You can choose to import just parts of chrono instead of the whole prelude. Please see ['`chrono`'s documentation](https://docs.rs/chrono/).
+> You can choose to import just parts of chrono instead of the whole prelude. Please see [`chrono`'s documentation](https://docs.rs/chrono/).
 
 To format a chrono `Date` or `DateTime` object, you can use the `formatl` method:
 
