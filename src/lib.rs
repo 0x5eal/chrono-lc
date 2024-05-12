@@ -166,7 +166,7 @@ fn parse_fixed(
 	date: Option<&NaiveDate>,
 	time: Option<&NaiveTime>,
 	off: Option<&(String, FixedOffset)>,
-	spec: Fixed,
+	spec: &Fixed,
 	locale: &str,
 ) -> Option<Result<(), Error>> {
 	use self::Fixed::*;
@@ -244,7 +244,48 @@ fn parse_fixed(
 				None
 			}
 		}
-		spec => parse_fixed(w, date, time, off, spec, locale),
+
+		spec => todo!("Support for formatting fixed format {:?} is yet to be implemented!", spec),
+	}
+}
+
+fn parse_numeric(date: Option<&NaiveDate>, time: Option<&NaiveTime>, off: Option<&(String, FixedOffset)>, spec: &Numeric) -> (usize, Option<i64>) {
+	use self::Numeric::*;
+
+	let week_from_sun = |d: &NaiveDate| (d.ordinal() as i32 - d.weekday().num_days_from_sunday() as i32 + 7) / 7;
+	let week_from_mon = |d: &NaiveDate| (d.ordinal() as i32 - d.weekday().num_days_from_monday() as i32 + 7) / 7;
+
+	match spec {
+		Year => (4, date.map(|d| i64::from(d.year()))),
+		YearDiv100 => (2, date.map(|d| div_floor(i64::from(d.year()), 100))),
+		YearMod100 => (2, date.map(|d| mod_floor(i64::from(d.year()), 100))),
+		IsoYear => (4, date.map(|d| i64::from(d.iso_week().year()))),
+		IsoYearDiv100 => (2, date.map(|d| div_floor(i64::from(d.iso_week().year()), 100))),
+		IsoYearMod100 => (2, date.map(|d| mod_floor(i64::from(d.iso_week().year()), 100))),
+		Month => (2, date.map(|d| i64::from(d.month()))),
+		Day => (2, date.map(|d| i64::from(d.day()))),
+		WeekFromSun => (2, date.map(|d| i64::from(week_from_sun(d)))),
+		WeekFromMon => (2, date.map(|d| i64::from(week_from_mon(d)))),
+		IsoWeek => (2, date.map(|d| i64::from(d.iso_week().week()))),
+		NumDaysFromSun => (1, date.map(|d| i64::from(d.weekday().num_days_from_sunday()))),
+		WeekdayFromMon => (1, date.map(|d| i64::from(d.weekday().number_from_monday()))),
+		Ordinal => (3, date.map(|d| i64::from(d.ordinal()))),
+		Hour => (2, time.map(|t| i64::from(t.hour()))),
+		Hour12 => (2, time.map(|t| i64::from(t.hour12().1))),
+		Minute => (2, time.map(|t| i64::from(t.minute()))),
+		Second => (2, time.map(|t| i64::from(t.second() + t.nanosecond() / 1_000_000_000))),
+		Nanosecond => (9, time.map(|t| i64::from(t.nanosecond() % 1_000_000_000))),
+		Timestamp => (
+			1,
+			match (date, time, off) {
+				(Some(d), Some(t), None) => Some(d.and_time(*t).and_utc().timestamp()),
+				(Some(d), Some(t), Some(&(_, off))) => Some((d.and_time(*t) - off).and_utc().timestamp()),
+				(_, _, _) => None,
+			},
+		),
+		// for the future expansion
+		Internal(_) => (1, None),
+		spec => todo!("Support for formatting numeric format {:?} is yet to be implemented!", spec),
 	}
 }
 
@@ -268,43 +309,8 @@ where
 			Item::OwnedLiteral(ref s) | Item::OwnedSpace(ref s) => write!(w, "{}", s)?,
 
 			Item::Numeric(spec, pad) => {
-				use self::Numeric::*;
-
-				let week_from_sun = |d: &NaiveDate| (d.ordinal() as i32 - d.weekday().num_days_from_sunday() as i32 + 7) / 7;
-				let week_from_mon = |d: &NaiveDate| (d.ordinal() as i32 - d.weekday().num_days_from_monday() as i32 + 7) / 7;
-
-				let (width, v) = match spec {
-					Year => (4, date.map(|d| i64::from(d.year()))),
-					YearDiv100 => (2, date.map(|d| div_floor(i64::from(d.year()), 100))),
-					YearMod100 => (2, date.map(|d| mod_floor(i64::from(d.year()), 100))),
-					IsoYear => (4, date.map(|d| i64::from(d.iso_week().year()))),
-					IsoYearDiv100 => (2, date.map(|d| div_floor(i64::from(d.iso_week().year()), 100))),
-					IsoYearMod100 => (2, date.map(|d| mod_floor(i64::from(d.iso_week().year()), 100))),
-					Month => (2, date.map(|d| i64::from(d.month()))),
-					Day => (2, date.map(|d| i64::from(d.day()))),
-					WeekFromSun => (2, date.map(|d| i64::from(week_from_sun(d)))),
-					WeekFromMon => (2, date.map(|d| i64::from(week_from_mon(d)))),
-					IsoWeek => (2, date.map(|d| i64::from(d.iso_week().week()))),
-					NumDaysFromSun => (1, date.map(|d| i64::from(d.weekday().num_days_from_sunday()))),
-					WeekdayFromMon => (1, date.map(|d| i64::from(d.weekday().number_from_monday()))),
-					Ordinal => (3, date.map(|d| i64::from(d.ordinal()))),
-					Hour => (2, time.map(|t| i64::from(t.hour()))),
-					Hour12 => (2, time.map(|t| i64::from(t.hour12().1))),
-					Minute => (2, time.map(|t| i64::from(t.minute()))),
-					Second => (2, time.map(|t| i64::from(t.second() + t.nanosecond() / 1_000_000_000))),
-					Nanosecond => (9, time.map(|t| i64::from(t.nanosecond() % 1_000_000_000))),
-					Timestamp => (
-						1,
-						match (date, time, off) {
-							(Some(d), Some(t), None) => Some(d.and_time(*t).and_utc().timestamp()),
-							(Some(d), Some(t), Some(&(_, off))) => Some((d.and_time(*t) - off).and_utc().timestamp()),
-							(_, _, _) => None,
-						},
-					),
-					// for the future expansion
-					Internal(_) => (1, None),
-					_ => todo!(),
-				};
+				use self::Numeric::{IsoYear, Year};
+				let (width, v) = parse_numeric(date, time, off, &spec);
 
 				if let Some(v) = v {
 					if (spec == Year || spec == IsoYear) && !(0..10_000).contains(&v) {
@@ -326,15 +332,7 @@ where
 				}
 			}
 
-			Item::Fixed(spec) => {
-				let ret = parse_fixed(w, date, time, off, spec, &locale);
-
-				match ret {
-					Some(ret) => ret?,
-					None => return Err(fmt::Error), // insufficient arguments for given format
-				}
-			}
-
+			Item::Fixed(spec) => parse_fixed(w, date, time, off, &spec, &locale).ok_or(fmt::Error)??,
 			Item::Error => return Err(fmt::Error),
 		}
 	}
