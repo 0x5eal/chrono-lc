@@ -23,7 +23,7 @@ pub struct Locale {
 fn main() {
 	let out_dir = env::var("OUT_DIR").unwrap();
 	let dest_path = Path::new(&out_dir).join("locales.rs");
-	let mut f = File::create(&dest_path).unwrap();
+	let mut f = File::create(dest_path).unwrap();
 
 	let _ = f.write_all(
 		r#####"// This file is @generated automatically by chrono_lc. Please don't edit by hand.		
@@ -148,6 +148,7 @@ fn load_locale(entry: &DirEntry) -> Result<Locale, BuildError> {
 	Ok(locale)
 }
 
+#[allow(dead_code)]
 enum BuildError {
 	Io(IoError),
 	Json(JsonError),

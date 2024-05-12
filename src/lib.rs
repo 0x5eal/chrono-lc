@@ -59,7 +59,7 @@
 pub(crate) use lazy_static::lazy_static;
 
 use std::collections::HashMap;
-use std::fmt;
+use std::fmt::{self, Error};
 
 use chrono::format::{Fixed, Item, Numeric, Pad, StrftimeItems};
 use chrono::{Datelike, FixedOffset, NaiveDate, NaiveTime, Offset, TimeZone, Timelike};
@@ -145,6 +145,109 @@ impl<'a, I: Iterator<Item = Item<'a>> + Clone> fmt::Display for DelayedFormatL10
 	}
 }
 
+/// Prints an offset from UTC in the format of `+HHMM` or `+HH:MM`.
+/// `Z` instead of `+00[:]00` is allowed when `allow_zulu` is true.
+fn write_local_minus_utc(w: &mut fmt::Formatter, off: FixedOffset, allow_zulu: bool, use_colon: bool) -> fmt::Result {
+	let off = off.local_minus_utc();
+	if !allow_zulu || off != 0 {
+		let (sign, off) = if off < 0 { ('-', -off) } else { ('+', off) };
+		if use_colon {
+			write!(w, "{}{:02}:{:02}", sign, off / 3600, off / 60 % 60)
+		} else {
+			write!(w, "{}{:02}{:02}", sign, off / 3600, off / 60 % 60)
+		}
+	} else {
+		write!(w, "Z")
+	}
+}
+
+fn parse_fixed(
+	w: &mut fmt::Formatter,
+	date: Option<&NaiveDate>,
+	time: Option<&NaiveTime>,
+	off: Option<&(String, FixedOffset)>,
+	spec: Fixed,
+	locale: &str,
+) -> Option<Result<(), Error>> {
+	use self::Fixed::*;
+
+	match spec {
+		ShortMonthName => date.map(|d| write!(w, "{}", short_month(d.month0() as usize, locale))),
+		LongMonthName => date.map(|d| write!(w, "{}", long_month(d.month0() as usize, locale))),
+		ShortWeekdayName => date.map(|d| write!(w, "{}", short_weekday(d.weekday().num_days_from_monday() as usize, locale))),
+		LongWeekdayName => date.map(|d| write!(w, "{}", long_weekday(d.weekday().num_days_from_monday() as usize, locale))),
+		LowerAmPm => time.map(|t| write!(w, "{}", ampm(t.hour12().0 as usize, locale))),
+		UpperAmPm => time.map(|t| write!(w, "{}", ampm(t.hour12().0 as usize + 2, locale))),
+		Nanosecond => time.map(|t| {
+			let nano = t.nanosecond() % 1_000_000_000;
+			if nano == 0 {
+				Ok(())
+			} else if nano % 1_000_000 == 0 {
+				write!(w, ".{:03}", nano / 1_000_000)
+			} else if nano % 1_000 == 0 {
+				write!(w, ".{:06}", nano / 1_000)
+			} else {
+				write!(w, ".{:09}", nano)
+			}
+		}),
+		Nanosecond3 => time.map(|t| {
+			let nano = t.nanosecond() % 1_000_000_000;
+			write!(w, ".{:03}", nano / 1_000_000)
+		}),
+		Nanosecond6 => time.map(|t| {
+			let nano = t.nanosecond() % 1_000_000_000;
+			write!(w, ".{:06}", nano / 1_000)
+		}),
+		Nanosecond9 => time.map(|t| {
+			let nano = t.nanosecond() % 1_000_000_000;
+			write!(w, ".{:09}", nano)
+		}),
+		Internal(_) => panic!("Internal is not supported"),
+		TimezoneName => off.map(|(name, _)| write!(w, "{}", *name)),
+		TimezoneOffsetColon => off.map(|&(_, off)| write_local_minus_utc(w, off, false, true)),
+		TimezoneOffsetColonZ => off.map(|&(_, off)| write_local_minus_utc(w, off, true, true)),
+		TimezoneOffsetDoubleColon => off.map(|&(_, off)| write_local_minus_utc(w, off, false, true)),
+		TimezoneOffsetTripleColon => off.map(|&(_, off)| write_local_minus_utc(w, off, false, true)),
+		TimezoneOffset => off.map(|&(_, off)| write_local_minus_utc(w, off, false, false)),
+		TimezoneOffsetZ => off.map(|&(_, off)| write_local_minus_utc(w, off, true, false)),
+		RFC2822 =>
+		// same to `%a, %e %b %Y %H:%M:%S %z`
+		{
+			if let (Some(d), Some(t), Some(&(_, off))) = (date, time, off) {
+				let sec = t.second() + t.nanosecond() / 1_000_000_000;
+				write!(
+					w,
+					"{}, {:2} {} {:04} {:02}:{:02}:{:02} ",
+					short_weekday(d.weekday().num_days_from_monday() as usize, locale),
+					d.day(),
+					short_month(d.month0() as usize, locale),
+					d.year(),
+					t.hour(),
+					t.minute(),
+					sec
+				)
+				.ok()?;
+				Some(write_local_minus_utc(w, off, false, false))
+			} else {
+				None
+			}
+		}
+		RFC3339 =>
+		// same to `%Y-%m-%dT%H:%M:%S%.f%:z`
+		{
+			if let (Some(d), Some(t), Some(&(_, off))) = (date, time, off) {
+				// reuse `Debug` impls which already print ISO 8601 format.
+				// this is faster in this way.
+				write!(w, "{:?}T{:?}", d, t).ok()?;
+				Some(write_local_minus_utc(w, off, false, true))
+			} else {
+				None
+			}
+		}
+		spec => parse_fixed(w, date, time, off, spec, locale),
+	}
+}
+
 /// This function is nearly entirely copied from chrono's format()
 /// internal formats (3, 6 and 9-digits nanoseconds) have been disabled due to lack of access to chrono internals
 pub fn format_l10n<'a, I>(
@@ -193,13 +296,14 @@ where
 					Timestamp => (
 						1,
 						match (date, time, off) {
-							(Some(d), Some(t), None) => Some(d.and_time(*t).timestamp()),
-							(Some(d), Some(t), Some(&(_, off))) => Some((d.and_time(*t) - off).timestamp()),
+							(Some(d), Some(t), None) => Some(d.and_time(*t).and_utc().timestamp()),
+							(Some(d), Some(t), Some(&(_, off))) => Some((d.and_time(*t) - off).and_utc().timestamp()),
 							(_, _, _) => None,
 						},
 					),
 					// for the future expansion
 					Internal(_) => (1, None),
+					_ => todo!(),
 				};
 
 				if let Some(v) = v {
@@ -223,97 +327,7 @@ where
 			}
 
 			Item::Fixed(spec) => {
-				use self::Fixed::*;
-
-				/// Prints an offset from UTC in the format of `+HHMM` or `+HH:MM`.
-				/// `Z` instead of `+00[:]00` is allowed when `allow_zulu` is true.
-				fn write_local_minus_utc(w: &mut fmt::Formatter, off: FixedOffset, allow_zulu: bool, use_colon: bool) -> fmt::Result {
-					let off = off.local_minus_utc();
-					if !allow_zulu || off != 0 {
-						let (sign, off) = if off < 0 { ('-', -off) } else { ('+', off) };
-						if use_colon {
-							write!(w, "{}{:02}:{:02}", sign, off / 3600, off / 60 % 60)
-						} else {
-							write!(w, "{}{:02}{:02}", sign, off / 3600, off / 60 % 60)
-						}
-					} else {
-						write!(w, "Z")
-					}
-				}
-
-				let ret = match spec {
-					ShortMonthName => date.map(|d| write!(w, "{}", short_month(d.month0() as usize, &locale))),
-					LongMonthName => date.map(|d| write!(w, "{}", long_month(d.month0() as usize, &locale))),
-					ShortWeekdayName => date.map(|d| write!(w, "{}", short_weekday(d.weekday().num_days_from_monday() as usize, &locale))),
-					LongWeekdayName => date.map(|d| write!(w, "{}", long_weekday(d.weekday().num_days_from_monday() as usize, &locale))),
-					LowerAmPm => time.map(|t| write!(w, "{}", ampm(t.hour12().0 as usize, &locale))),
-					UpperAmPm => time.map(|t| write!(w, "{}", ampm(t.hour12().0 as usize + 2, &locale))),
-					Nanosecond => time.map(|t| {
-						let nano = t.nanosecond() % 1_000_000_000;
-						if nano == 0 {
-							Ok(())
-						} else if nano % 1_000_000 == 0 {
-							write!(w, ".{:03}", nano / 1_000_000)
-						} else if nano % 1_000 == 0 {
-							write!(w, ".{:06}", nano / 1_000)
-						} else {
-							write!(w, ".{:09}", nano)
-						}
-					}),
-					Nanosecond3 => time.map(|t| {
-						let nano = t.nanosecond() % 1_000_000_000;
-						write!(w, ".{:03}", nano / 1_000_000)
-					}),
-					Nanosecond6 => time.map(|t| {
-						let nano = t.nanosecond() % 1_000_000_000;
-						write!(w, ".{:06}", nano / 1_000)
-					}),
-					Nanosecond9 => time.map(|t| {
-						let nano = t.nanosecond() % 1_000_000_000;
-						write!(w, ".{:09}", nano)
-					}),
-					Internal(_) => panic!("Internal is not supported"),
-					TimezoneName => off.map(|(name, _)| write!(w, "{}", *name)),
-					TimezoneOffsetColon => off.map(|&(_, off)| write_local_minus_utc(w, off, false, true)),
-					TimezoneOffsetColonZ => off.map(|&(_, off)| write_local_minus_utc(w, off, true, true)),
-					TimezoneOffsetDoubleColon => off.map(|&(_, off)| write_local_minus_utc(w, off, false, true)),
-					TimezoneOffsetTripleColon => off.map(|&(_, off)| write_local_minus_utc(w, off, false, true)),
-					TimezoneOffset => off.map(|&(_, off)| write_local_minus_utc(w, off, false, false)),
-					TimezoneOffsetZ => off.map(|&(_, off)| write_local_minus_utc(w, off, true, false)),
-					RFC2822 =>
-					// same to `%a, %e %b %Y %H:%M:%S %z`
-					{
-						if let (Some(d), Some(t), Some(&(_, off))) = (date, time, off) {
-							let sec = t.second() + t.nanosecond() / 1_000_000_000;
-							write!(
-								w,
-								"{}, {:2} {} {:04} {:02}:{:02}:{:02} ",
-								short_weekday(d.weekday().num_days_from_monday() as usize, &locale),
-								d.day(),
-								short_month(d.month0() as usize, &locale),
-								d.year(),
-								t.hour(),
-								t.minute(),
-								sec
-							)?;
-							Some(write_local_minus_utc(w, off, false, false))
-						} else {
-							None
-						}
-					}
-					RFC3339 =>
-					// same to `%Y-%m-%dT%H:%M:%S%.f%:z`
-					{
-						if let (Some(d), Some(t), Some(&(_, off))) = (date, time, off) {
-							// reuse `Debug` impls which already print ISO 8601 format.
-							// this is faster in this way.
-							write!(w, "{:?}T{:?}", d, t)?;
-							Some(write_local_minus_utc(w, off, false, true))
-						} else {
-							None
-						}
-					}
-				};
+				let ret = parse_fixed(w, date, time, off, spec, &locale);
 
 				match ret {
 					Some(ret) => ret?,
