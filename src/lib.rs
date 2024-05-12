@@ -161,6 +161,7 @@ fn write_local_minus_utc(w: &mut fmt::Formatter, off: FixedOffset, allow_zulu: b
 	}
 }
 
+/// Parses a [Fixed] value and formats it.
 fn parse_fixed(
 	w: &mut fmt::Formatter,
 	date: Option<&NaiveDate>,
@@ -249,6 +250,7 @@ fn parse_fixed(
 	}
 }
 
+/// Parses a [Numeric] value and returns its width and its formattable component.
 fn parse_numeric(date: Option<&NaiveDate>, time: Option<&NaiveTime>, off: Option<&(String, FixedOffset)>, spec: &Numeric) -> (usize, Option<i64>) {
 	use self::Numeric::*;
 
