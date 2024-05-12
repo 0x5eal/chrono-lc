@@ -26,7 +26,7 @@
 //! ```rust
 //! # use chrono::prelude::*;
 //! # use chrono_lc::LocaleDate;
-//!
+//! #
 //! let dt = FixedOffset::east_opt(34200)
 //!        .unwrap()
 //!        .with_ymd_and_hms(2001, 7, 8, 0, 34, 59)
